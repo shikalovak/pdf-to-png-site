@@ -15,14 +15,19 @@
 
     <style>
       :root {
-        --bg-blue-light: #e0edff;
-        --bg-blue-main: #2563eb;
-        --bg-blue-dark: #4f46e5;
-        --text-main: #0f172a;
-        --text-muted: #6b7280;
-        --card-bg: #ffffff;
-        --border-subtle: #e5e7eb;
-      }
+  --bg-blue-light: #e0edff;
+  --bg-blue-main: #2563eb;
+  --bg-blue-dark: #4f46e5;
+  --text-main: #0f172a;
+  --text-muted: #6b7280;
+  --card-bg: #ffffff;
+  --border-subtle: #e5e7eb;
+
+  /* новое */
+  --green-main: #22c55e;
+  --green-dark: #16a34a;
+  --green-shadow: rgba(22, 163, 74, 0.55);
+}
 
       * {
         box-sizing: border-box;
@@ -156,32 +161,32 @@
       }
 
       .hero-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 22px;
-        border-radius: 999px;
-        background: var(--bg-blue-main);
-        color: #ffffff;
-        font-size: 15px;
-        font-weight: 600;
-        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.6);
-        transition: background 0.15s ease, transform 0.15s ease,
-          box-shadow 0.15s ease;
-      }
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--green-main), var(--green-dark));
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 14px 30px var(--green-shadow);
+  transition: background 0.15s ease, transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
 
-      .hero-button:hover {
-        background: #1d4ed8;
-        transform: translateY(-1px);
-        box-shadow: 0 18px 36px rgba(37, 99, 235, 0.7);
-      }
+.hero-button:hover {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(22, 163, 74, 0.7);
+}
 
       .hero-note {
         font-size: 13px;
         color: var(--text-muted);
       }
 
-      /* EXTENSION MOCK (как попап) */
+      /* EXTENSION MOCK */
 
       .hero-right {
         flex: 0 0 360px;
@@ -291,7 +296,7 @@
       /* GLOBAL SECTIONS */
 
       section {
-        margin-top: 104px; /* много воздуха после hero */
+        margin-top: 104px;
       }
 
       .section-title {
@@ -305,7 +310,7 @@
         color: var(--text-muted);
       }
 
-      /* HOW + WHY = ДВА СТОЛБЦА */
+      /* HOW + WHY */
 
       .two-col-wrapper {
         display: flex;
@@ -431,33 +436,38 @@
         color: var(--text-muted);
       }
 
+      /* MOBILE */
+
       @media (max-width: 768px) {
-  .site-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
+        /* шапка: лого слева, How / FAQ справа */
+        .site-header {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
 
-  .main-nav {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: nowrap;
-  }
+        .main-nav {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: nowrap;
+        }
 
-  .nav-button {
-    display: none;
-  }
+        /* прячем кнопку в хедере на мобиле */
+        .nav-button {
+          display: none;
+        }
 
-  .hero-title span {
-    display: block;
-    margin-top: 4px;
-  }
+        /* переносим in one click на вторую строку */
+        .hero-title span {
+          display: block;
+          margin-top: 4px;
+        }
 
-  section {
-    margin-top: 80px;
-  }
-}
+        section {
+          margin-top: 80px;
+        }
+      }
     </style>
   </head>
 
@@ -476,7 +486,6 @@
         <nav class="main-nav">
           <a href="#how-why">How it works</a>
           <a href="#faq">FAQ</a>
-          <!-- TODO: подставь реальный URL из Chrome Web Store -->
           <a
             href="https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=item-share-cb"
             target="_blank"
@@ -502,7 +511,6 @@
           </p>
 
           <div class="hero-actions">
-            <!-- TODO: сюда тоже URL стора -->
             <a
               href="https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=item-share-cb"
               class="hero-button"
@@ -514,7 +522,7 @@
           </div>
         </div>
 
-        <!-- МОК ПОПАПА -->
+        <!-- POPUP MOCK -->
         <div class="hero-right">
           <div class="ext-card">
             <div class="ext-header">
@@ -545,7 +553,7 @@
         </div>
       </section>
 
-      <!-- HOW + WHY В ДВА СТОЛБЦА -->
+      <!-- HOW + WHY -->
       <section id="how-why">
         <div class="two-col-wrapper">
           <div class="two-col">
@@ -609,7 +617,7 @@
         </div>
       </section>
 
-      <!-- FAQ ОТДЕЛЬНЫМ БЛОКОМ -->
+      <!-- FAQ -->
       <section id="faq">
         <div class="faq-section">
           <div class="faq-header">
@@ -645,7 +653,7 @@
         </div>
       </section>
 
-      <!-- FEEDBACK / SUPPORT -->
+      <!-- FEEDBACK -->
       <section>
         <div class="feedback-section">
           <div class="feedback-title">Help make this extension better</div>
