@@ -1,674 +1,636 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>PDF to PNG converter – Free Chrome extension</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="Free PDF to PNG converter. Install the Chrome extension and convert any PDF to high-quality PNG images in one click. Works offline, files never leave your computer."
-  />
+  <head>
+    <meta charset="UTF-8" />
+    <title>PDF to PNG converter – Free Chrome extension</title>
+    <meta
+      name="description"
+      content="Convert PDF pages to crisp PNG images directly in your browser. Free Chrome extension, no uploads, everything happens locally on your device."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --white: #ffffff;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --border: #e5e7eb;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
-      --radius-lg: 18px;
-    }
+    <!-- Favicon (используем иконки из /icons) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon48.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon16.png" />
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <style>
+      :root {
+        --bg-blue-light: #e0edff;
+        --bg-blue-main: #2563eb;
+        --bg-blue-dark: #4f46e5;
+        --text-main: #0f172a;
+        --text-muted: #6b7280;
+        --card-bg: #ffffff;
+        --border-subtle: #e5e7eb;
+      }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: radial-gradient(circle at top, #e0edff 0, #f5f7fb 45%, #ffffff 100%);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+      * {
+        box-sizing: border-box;
+      }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        color: var(--text-main);
+        background: radial-gradient(
+            circle at top,
+            var(--bg-blue-light) 0,
+            #f5f7fb 45%,
+            #ffffff 100%
+          );
+      }
 
-    header {
-      width: 100%;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(16px);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
 
-    .nav-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
+      .page {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 32px 16px 64px;
+      }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 18px;
-    }
+      /* Header */
 
-    .logo-mark {
-      width: 26px;
-      height: 26px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-size: 14px;
-      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
-    }
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+      }
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      font-size: 14px;
-    }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-    nav a {
-      color: var(--text-muted);
-      transition: color 0.15s ease, opacity 0.15s ease;
-    }
+      .brand-logo {
+        width: 28px;
+        height: 28px;
+        border-radius: 9px;
+        box-shadow: 0 5px 14px rgba(37, 99, 235, 0.45);
+      }
 
-    nav a:hover {
-      color: var(--text-main);
-      opacity: 0.9;
-    }
+      .brand-name {
+        font-size: 18px;
+        font-weight: 700;
+      }
 
-    .nav-cta {
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: none;
-      background: var(--accent);
-      color: #ffffff !important;
-      font-weight: 600;
-      font-size: 14px;
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-    }
+      .site-header-cta {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(37, 99, 235, 0.22);
+        font-size: 13px;
+        color: #1d4ed8;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+      }
 
-    .nav-cta span.icon {
-      font-size: 15px;
-    }
+      /* Hero */
 
-    main {
-      flex: 1;
-      padding: 40px 16px 60px;
-    }
-
-    .hero {
-      max-width: 960px;
-      width: 100%;
-      margin: 0 auto 40px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-      gap: 40px;
-      align-items: center;
-    }
-
-    .hero-text {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 10px;
-      background: rgba(37, 99, 235, 0.08);
-      border-radius: 999px;
-      font-size: 12px;
-      color: #1d4ed8;
-      font-weight: 500;
-      width: fit-content;
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #22c55e;
-    }
-
-    h1 {
-      font-size: clamp(32px, 4vw, 40px);
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-    }
-
-    h2 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      letter-spacing: -0.02em;
-    }
-
-    h3 {
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-
-    .accent {
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .subtitle {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--text-muted);
-      max-width: 480px;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      margin-top: 6px;
-    }
-
-    .hero-cta {
-      padding: 12px 22px;
-      border-radius: 999px;
-      border: none;
-      background: var(--accent);
-      color: #ffffff;
-      font-weight: 600;
-      font-size: 15px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.45);
-      transition: background 0.15s ease, transform 0.15s ease,
-        box-shadow 0.15s ease;
-      text-decoration: none;
-    }
-
-    .hero-cta:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 22px 50px rgba(37, 99, 235, 0.5);
-    }
-
-    .hero-cta small {
-      font-weight: 500;
-      opacity: 0.9;
-    }
-
-    .hero-note {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .hero-note strong {
-      color: #111827;
-    }
-
-    .hero-visual {
-      background: var(--white);
-      border-radius: 26px;
-      padding: 18px 18px 22px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .dots {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #e5e7eb;
-    }
-
-    .dot.red { background: #f97373; }
-    .dot.yellow { background: #facc15; }
-    .dot.green { background: #4ade80; }
-
-    .file-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .file-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: #f9fafb;
-      font-size: 13px;
-    }
-
-    .file-main {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .file-icon {
-      width: 26px;
-      height: 32px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #f97316, #fb7185);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .file-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .file-name {
-      font-weight: 500;
-    }
-
-    .file-size {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .status {
-      font-size: 12px;
-      font-weight: 500;
-      color: #16a34a;
-    }
-
-    .convert-preview {
-      margin-top: 6px;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px dashed #cbd5f5;
-      background: #eff6ff;
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      color: #1d4ed8;
-    }
-
-    .convert-preview span.label {
-      font-weight: 500;
-    }
-
-    .convert-preview span.format {
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #1d4ed8;
-      color: #ffffff;
-      font-size: 11px;
-    }
-
-    .content-section {
-      max-width: 960px;
-      margin: 0 auto 36px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-      gap: 32px;
-      align-items: flex-start;
-    }
-
-    .content-section.single {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .content-text p {
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .content-text ul {
-      margin: 8px 0 0;
-      padding-left: 18px;
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text-muted);
-    }
-
-    .content-text li {
-      margin-bottom: 4px;
-    }
-
-    .content-note {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 8px;
-    }
-
-    .faq-item {
-      margin-bottom: 14px;
-    }
-
-    .faq-item p {
-      margin: 0;
-    }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 18px 16px 26px;
-      font-size: 12px;
-      color: var(--text-muted);
-      background: #ffffff;
-    }
-
-    .footer-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: var(--text-muted);
-    }
-
-    .footer-links a:hover {
-      color: var(--text-main);
-    }
-
-    @media (max-width: 768px) {
       .hero {
-        grid-template-columns: 1fr;
-        gap: 26px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 44px;
+        align-items: center;
       }
 
-      .hero-visual {
-        order: -1;
+      .hero-left {
+        flex: 1 1 320px;
+        min-width: 280px;
       }
 
-      .nav-inner {
-        padding-inline: 14px;
+      .hero-kicker {
+        font-size: 13px;
+        color: #1d4ed8;
+        margin-bottom: 10px;
       }
 
-      nav ul {
-        gap: 12px;
+      .hero-title {
+        font-size: 38px;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        margin: 0 0 12px;
       }
 
-      .nav-cta {
-        display: none;
+      .hero-title span-accent {
+        color: #2563eb;
       }
 
-      main {
-        padding-top: 26px;
+      .hero-subtitle {
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--text-muted);
+        margin-bottom: 22px;
+        max-width: 520px;
       }
 
-      .content-section {
-        grid-template-columns: 1fr;
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <header>
-    <div class="nav-inner">
-      <div class="logo">
-        <div class="logo-mark">P2</div>
-        <span>PDF to PNG</span>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#top">Home</a></li>
-          <li><a href="#how-it-works">How it works</a></li>
-          <li><a href="#faq">FAQ</a></li>
-          <li>
+      .hero-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: var(--bg-blue-main);
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 600;
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.6);
+        transition: background 0.15s ease, transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+
+      .hero-button:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 18px 36px rgba(37, 99, 235, 0.7);
+      }
+
+      .hero-note {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      /* Extension mock card (copy of popup) */
+
+      .hero-right {
+        flex: 0 0 360px;
+        max-width: 380px;
+      }
+
+      .ext-card {
+        border-radius: 24px;
+        background: radial-gradient(
+            circle at top,
+            #e0edff 0,
+            #ecf2ff 40%,
+            #ffffff 100%
+          );
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.26);
+        overflow: hidden;
+      }
+
+      .ext-header {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(14px);
+      }
+
+      .ext-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ext-logo img {
+        width: 22px;
+        height: 22px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+      }
+
+      .ext-logo span {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .ext-body {
+        padding: 14px 16px 12px;
+      }
+
+      .ext-badge {
+        display: inline-flex;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.08);
+        color: #1d4ed8;
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .ext-title {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+      }
+
+      .ext-subtitle {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+      }
+
+      .ext-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 16px;
+        border-radius: 999px;
+        background: var(--bg-blue-main);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+      }
+
+      .ext-button span {
+        pointer-events: none;
+      }
+
+      .ext-file {
+        margin-top: 10px;
+        padding: 8px 10px;
+        border-radius: 12px;
+        background: #ffffff;
+        border: 1px solid var(--border-subtle);
+      }
+
+      .ext-file-name {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .ext-file-meta {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .ext-footer {
+        padding: 8px 16px 10px;
+        border-top: 1px solid var(--border-subtle);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .ext-footer a {
+        font-size: 11px;
+        color: #2563eb;
+      }
+
+      .ext-footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Sections */
+
+      section {
+        margin-top: 96px; /* много воздуха после hero */
+      }
+
+      .section-title {
+        font-size: 24px;
+        margin-bottom: 16px;
+      }
+
+      .section-text {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 760px;
+      }
+
+      .section-text + .section-text {
+        margin-top: 10px;
+      }
+
+      .steps {
+        list-style: decimal;
+        padding-left: 20px;
+        margin: 0;
+      }
+
+      .steps li {
+        margin-bottom: 8px;
+      }
+
+      .steps li span {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-muted);
+      }
+
+      .bullets {
+        list-style: disc;
+        padding-left: 20px;
+        margin: 0;
+      }
+
+      .bullets li {
+        margin-bottom: 8px;
+      }
+
+      .faq-item {
+        margin-bottom: 18px;
+      }
+
+      .faq-q {
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .faq-a {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      /* Feedback / support section */
+
+      .feedback-section {
+        border-radius: 20px;
+        border: 1px solid var(--border-subtle);
+        background: #f9fafb;
+        padding: 20px 20px 18px;
+        max-width: 720px;
+      }
+
+      .feedback-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .feedback-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      .feedback-link {
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(37, 99, 235, 0.2);
+        color: #1d4ed8;
+        background: #eef2ff;
+      }
+
+      .site-footer {
+        margin-top: 56px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-subtle);
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 768px) {
+        .site-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        section {
+          margin-top: 72px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <!-- Header -->
+      <header class="site-header">
+        <div class="brand">
+          <img
+            src="icons/icon48.png"
+            alt="PDF to PNG logo"
+            class="brand-logo"
+          />
+          <div class="brand-name">PDF to PNG</div>
+        </div>
+        <div class="site-header-cta">
+          Free Chrome extension · No uploads, local conversion
+        </div>
+      </header>
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-kicker">Convert PDF pages to PNG images</div>
+          <h1 class="hero-title">
+            PDF to PNG converter <span style="color:#2563eb;">in one click</span>
+          </h1>
+          <p class="hero-subtitle">
+            Quickly convert any PDF file into crisp PNG images right in your
+            browser. No uploads, no waiting – everything happens locally on your
+            device.
+          </p>
+
+          <div class="hero-actions">
+            <!-- TODO: подставь сюда реальную ссылку на Chrome Web Store -->
             <a
-              class="nav-cta"
-              href="https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=my_website"
-              target="_blank"
+              href="#"
+              class="hero-button"
               rel="noopener noreferrer"
             >
-              <span class="icon">➕</span>
-              <span>Add to Chrome</span>
+              Install the extension – It’s free
             </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main id="top">
-    <section class="hero">
-      <div class="hero-text">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          <span>Free Chrome extension</span>
-        </div>
-        <h1>
-          PDF to PNG converter
-          <span class="accent">in one click</span>
-        </h1>
-        <p class="subtitle">
-          Convert any PDF to crisp PNG images directly in your browser.
-          No uploads, no waiting, everything happens locally on your device.
-        </p>
-
-        <div class="hero-actions">
-          <a
-            class="hero-cta"
-            href="YOUR_CHROME_EXTENSION_URL"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span>Install the extension</span>
-            <small>It is free</small>
-          </a>
-          <p class="hero-note">
-            <strong>Works offline.</strong> Your PDF files never leave your computer.
-          </p>
-        </div>
-      </div>
-
-      <aside class="hero-visual" aria-hidden="true">
-        <div class="card-header">
-          <span>PDF to PNG preview</span>
-          <div class="dots">
-            <div class="dot red"></div>
-            <div class="dot yellow"></div>
-            <div class="dot green"></div>
+            <span class="hero-note">
+              Works offline. Your PDF files never leave your computer.
+            </span>
           </div>
         </div>
 
-        <div class="file-list">
-          <div class="file-row">
-            <div class="file-main">
-              <div class="file-icon">PDF</div>
-              <div class="file-meta">
-                <span class="file-name">slides.pdf</span>
-                <span class="file-size">4.2 MB • 12 pages</span>
+        <!-- Extension mock that matches the real popup -->
+        <div class="hero-right">
+          <div class="ext-card">
+            <div class="ext-header">
+              <div class="ext-logo">
+                <img src="icons/icon48.png" alt="PDF to PNG" />
+                <span>PDF to PNG</span>
               </div>
             </div>
-            <span class="status">Ready to convert</span>
-          </div>
-
-          <div class="file-row">
-            <div class="file-main">
-              <div class="file-icon" style="background: linear-gradient(135deg, #22c55e, #38bdf8);">
-                PNG
+            <div class="ext-body">
+              <div class="ext-badge">Free Chrome extension</div>
+              <div class="ext-title">PDF → PNG converter</div>
+              <div class="ext-subtitle">
+                Convert any PDF to crisp PNG images directly in your browser.
+                No uploads, everything happens locally on your device.
               </div>
-              <div class="file-meta">
-                <span class="file-name">slides-page-1.png</span>
-                <span class="file-size">1920×1080</span>
+              <div class="ext-button">
+                <span>Choose PDF file</span>
+              </div>
+
+              <div class="ext-file">
+                <div class="ext-file-name">slides.pdf</div>
+                <div class="ext-file-meta">
+                  12 pages · Ready to convert to PNG
+                </div>
               </div>
             </div>
-            <span class="status">Optimized</span>
+            <div class="ext-footer">
+              <a
+                href="https://shikalovak.typeform.com/to/FWLacIaR"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Feedback / feature requests
+              </a>
+              <a
+                href="https://www.buymeacoffee.com/shikalova"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Support this project
+              </a>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="convert-preview">
-          <span>
-            <span class="label">Conversion:</span>
-            PDF to PNG images with high quality
-          </span>
-          <span class="format">Lossless</span>
+      <!-- How it works -->
+      <section id="how-to">
+        <h2 class="section-title">
+          How to convert PDF to PNG in Chrome
+        </h2>
+        <div class="section-text">
+          <ol class="steps">
+            <li>
+              <span>Install the “PDF to PNG” Chrome extension.</span>
+            </li>
+            <li>
+              <span>Pin it to your toolbar for quick access.</span>
+            </li>
+            <li>
+              <span>Click the extension icon and choose a PDF file.</span>
+            </li>
+            <li>
+              <span>
+                The extension converts each page locally and shows you a PNG
+                preview.
+              </span>
+            </li>
+            <li>
+              <span>Download the pages you need as PNG images.</span>
+            </li>
+          </ol>
         </div>
-      </aside>
-    </section>
+      </section>
 
-    <section class="content-section" id="how-it-works">
-      <div class="content-text">
-        <h2>How to convert PDF to PNG in Chrome</h2>
-        <p>
-          This PDF to PNG converter is a lightweight browser extension.
-          It helps you quickly export PDF pages as PNG images without uploading files to external servers.
-          Everything runs directly in your browser using local processing.
-        </p>
-        <p>To convert a PDF to PNG images:</p>
-        <ul>
-          <li>Install the PDF to PNG Chrome extension from the Chrome Web Store.</li>
-          <li>Open a PDF file in your browser or select a PDF from your computer.</li>
-          <li>Click the extension icon and choose which pages you want to convert.</li>
-          <li>Download the generated PNG images to your device.</li>
-        </ul>
-        <p class="content-note">
-          This tool is ideal if you need to extract slides, screenshots, or separate pages from a PDF document and save them as PNG files.
-        </p>
-      </div>
+      <!-- Why use an extension -->
+      <section id="why-extension">
+        <h2 class="section-title">
+          Why use a PDF to PNG extension instead of a website?
+        </h2>
+        <div class="section-text">
+          <ul class="bullets">
+            <li>
+              <span>
+                <strong>Privacy first.</strong> Your PDF files never leave your
+                device – there are no uploads to third-party servers.
+              </span>
+            </li>
+            <li>
+              <span>
+                <strong>Works offline.</strong> Once installed, the extension
+                works even without an internet connection.
+              </span>
+            </li>
+            <li>
+              <span>
+                <strong>Fast previews.</strong> Convert and preview pages
+                directly in your browser popup.
+              </span>
+            </li>
+            <li>
+              <span>
+                <strong>Always at hand.</strong> No need to search for a
+                converter website – the extension lives in your Chrome toolbar.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </section>
 
-      <div class="content-text">
-        <h2>Why use a PDF to PNG extension</h2>
-        <p>Compared to online PDF to PNG services, a browser extension gives you several advantages:</p>
-        <ul>
-          <li>No need to upload sensitive documents to third-party servers.</li>
-          <li>Fast conversion, because everything happens locally in your browser.</li>
-          <li>Works even when you are offline or have a slow internet connection.</li>
-          <li>Simple interface focused only on converting PDF to PNG, without ads or distractions.</li>
-        </ul>
-        <p class="content-note">
-          If you regularly work with PDFs from email, cloud storage, or internal systems,
-          having a one-click PDF to PNG converter in Chrome can save a lot of time.
-        </p>
-      </div>
-    </section>
+      <!-- FAQ -->
+      <section id="faq">
+        <h2 class="section-title">FAQ</h2>
+        <div class="section-text">
+          <div class="faq-item">
+            <div class="faq-q">Is the extension really free?</div>
+            <div class="faq-a">
+              Yes. You can install and use it for free. If you like it, you can
+              support the project with a small donation.
+            </div>
+          </div>
 
-    <section class="content-section single" id="faq">
-      <div class="content-text">
-        <h2>FAQ: PDF to PNG converter</h2>
+          <div class="faq-item">
+            <div class="faq-q">
+              Are my documents uploaded anywhere?
+            </div>
+            <div class="faq-a">
+              No. All conversion happens directly in your browser using local
+              processing. Your PDF files never leave your computer.
+            </div>
+          </div>
 
-        <div class="faq-item">
-          <h3>Is this PDF to PNG converter free?</h3>
-          <p>
-            Yes, the Chrome extension is free to install and use.
-            You can convert as many PDF files to PNG as you need without limits.
+          <div class="faq-item">
+            <div class="faq-q">
+              Can I use it without an internet connection?
+            </div>
+            <div class="faq-a">
+              Yes. After installation from the Chrome Web Store, the extension
+              can convert PDFs to PNGs even when you are offline.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feedback / support block -->
+      <section>
+        <div class="feedback-section">
+          <div class="feedback-title">Help make this extension better</div>
+          <p class="section-text" style="margin-bottom: 8px;">
+            I’m actively improving this project. If you have ideas, feature
+            requests or just want to say hi, I’d love to hear from you.
           </p>
+          <div class="feedback-links">
+            <a
+              href="https://shikalovak.typeform.com/to/FWLacIaR"
+              target="_blank"
+              rel="noreferrer"
+              class="feedback-link"
+            >
+              Leave feedback / request a feature
+            </a>
+            <a
+              href="https://www.buymeacoffee.com/shikalova"
+              target="_blank"
+              rel="noreferrer"
+              class="feedback-link"
+            >
+              Support this project ☕
+            </a>
+          </div>
         </div>
+      </section>
 
-        <div class="faq-item">
-          <h3>Do my PDF files leave my computer?</h3>
-          <p>
-            No, your PDF files are processed directly in your browser.
-            The extension does not upload your documents to remote servers.
-          </p>
-        </div>
-
-        <div class="faq-item">
-          <h3>What image quality do I get?</h3>
-          <p>
-            The extension converts each PDF page to a high-resolution PNG image,
-            suitable for presentations, printing, or sharing.
-          </p>
-        </div>
-
-        <div class="faq-item">
-          <h3>Can I choose specific pages to convert?</h3>
-          <p>
-            Yes, you can select individual pages or convert the entire PDF to a set of PNG files.
-          </p>
-        </div>
-
-        <div class="faq-item">
-          <h3>Which browsers are supported?</h3>
-          <p>
-            The extension is designed for Google Chrome.
-            It may also work in Chromium-based browsers that support Chrome extensions.
-          </p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-      <span>© <span id="year"></span> PDF to PNG converter</span>
-      <div class="footer-links">
-        <a href="#top">Home</a>
-        <a href="#how-it-works">How it works</a>
-        <a href="mailto:hello@pdf-to-png.com">Support</a>
-      </div>
+      <!-- Footer -->
+      <footer class="site-footer">
+        PDF to PNG converter – Chrome extension for fast, private PDF to PNG
+        conversion. Built with love and no external servers.
+      </footer>
     </div>
-    <script>
-      document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
-  </footer>
-</body>
+  </body>
 </html>
