@@ -432,20 +432,32 @@
       }
 
       @media (max-width: 768px) {
-        .site-header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
+  .site-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-        .main-nav {
-          flex-wrap: wrap;
-          justify-content: flex-start;
-        }
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: nowrap;
+  }
 
-        section {
-          margin-top: 80px;
-        }
-      }
+  .nav-button {
+    display: none;
+  }
+
+  .hero-title span {
+    display: block;
+    margin-top: 4px;
+  }
+
+  section {
+    margin-top: 80px;
+  }
+}
     </style>
   </head>
 
