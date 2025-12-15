@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,6 +8,30 @@
       content="Convert PDF pages to crisp PNG images directly in your browser. Free Chrome extension, no uploads, everything happens locally on your device."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://pdf-to-png.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PDF to PNG" />
+    <meta property="og:title" content="PDF to PNG converter – Free Chrome extension" />
+    <meta
+      property="og:description"
+      content="Convert PDF pages to crisp PNG images directly in your browser. No uploads — everything happens locally on your device."
+    />
+    <meta property="og:url" content="https://pdf-to-png.com/" />
+    <!-- Optional: add when you have a share image -->
+    <!-- <meta property="og:image" content="https://pdf-to-png.com/og-image.png" /> -->
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PDF to PNG converter – Free Chrome extension" />
+    <meta
+      name="twitter:description"
+      content="Convert PDF pages to crisp PNG images directly in your browser. No uploads — everything happens locally on your device."
+    />
+    <!-- Optional: add when you have a share image -->
+    <!-- <meta name="twitter:image" content="https://pdf-to-png.com/og-image.png" /> -->
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="icons/icon48.png" />
@@ -15,19 +39,18 @@
 
     <style>
       :root {
-  --bg-blue-light: #e0edff;
-  --bg-blue-main: #2563eb;
-  --bg-blue-dark: #4f46e5;
-  --text-main: #0f172a;
-  --text-muted: #6b7280;
-  --card-bg: #ffffff;
-  --border-subtle: #e5e7eb;
+        --bg-blue-light: #e0edff;
+        --bg-blue-main: #2563eb;
+        --bg-blue-dark: #4f46e5;
+        --text-main: #0f172a;
+        --text-muted: #6b7280;
+        --card-bg: #ffffff;
+        --border-subtle: #e5e7eb;
 
-  /* новое */
-  --green-main: #22c55e;
-  --green-dark: #16a34a;
-  --green-shadow: rgba(22, 163, 74, 0.55);
-}
+        --green-main: #22c55e;
+        --green-dark: #16a34a;
+        --green-shadow: rgba(22, 163, 74, 0.55);
+      }
 
       * {
         box-sizing: border-box;
@@ -35,20 +58,30 @@
 
       body {
         margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: var(--text-main);
-        background: radial-gradient(
-            circle at top,
-            var(--bg-blue-light) 0,
-            #f5f7fb 45%,
-            #ffffff 100%
-          );
+        background: radial-gradient(circle at top, var(--bg-blue-light) 0, #f5f7fb 45%, #ffffff 100%);
       }
 
       a {
         color: inherit;
         text-decoration: none;
+      }
+
+      /* Accessible skip link */
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 12px;
+        background: #ffffff;
+        border: 1px solid var(--border-subtle);
+        padding: 10px 12px;
+        border-radius: 10px;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+        z-index: 9999;
+      }
+      .skip-link:focus {
+        left: 12px;
       }
 
       .page {
@@ -58,7 +91,6 @@
       }
 
       /* HEADER */
-
       .site-header {
         display: flex;
         align-items: center;
@@ -115,7 +147,6 @@
       }
 
       /* HERO */
-
       .hero {
         display: flex;
         flex-wrap: wrap;
@@ -161,33 +192,26 @@
       }
 
       .hero-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 22px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--green-main), var(--green-dark));
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 600;
-  box-shadow: 0 14px 30px var(--green-shadow);
-  transition: background 0.15s ease, transform 0.15s ease,
-    box-shadow 0.15s ease;
-}
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--green-main), var(--green-dark));
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 600;
+        box-shadow: 0 14px 30px var(--green-shadow);
+        transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+      }
 
-.hero-button:hover {
-  background: linear-gradient(135deg, #16a34a, #15803d);
-  transform: translateY(-1px);
-  box-shadow: 0 18px 36px rgba(22, 163, 74, 0.7);
-}
-
-      .hero-note {
-        font-size: 13px;
-        color: var(--text-muted);
+      .hero-button:hover {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        transform: translateY(-1px);
+        box-shadow: 0 18px 36px rgba(22, 163, 74, 0.7);
       }
 
       /* EXTENSION MOCK */
-
       .hero-right {
         flex: 0 0 360px;
         max-width: 380px;
@@ -195,12 +219,7 @@
 
       .ext-card {
         border-radius: 24px;
-        background: radial-gradient(
-            circle at top,
-            #e0edff 0,
-            #ecf2ff 40%,
-            #ffffff 100%
-          );
+        background: radial-gradient(circle at top, #e0edff 0, #ecf2ff 40%, #ffffff 100%);
         box-shadow: 0 20px 40px rgba(15, 23, 42, 0.26);
         overflow: hidden;
       }
@@ -294,7 +313,6 @@
       }
 
       /* GLOBAL SECTIONS */
-
       section {
         margin-top: 104px;
       }
@@ -311,7 +329,6 @@
       }
 
       /* HOW + WHY */
-
       .two-col-wrapper {
         display: flex;
         flex-wrap: wrap;
@@ -356,7 +373,6 @@
       }
 
       /* FAQ */
-
       .faq-section {
         border-radius: 24px;
         background: #f9fafb;
@@ -383,17 +399,18 @@
       }
 
       .faq-q {
-        font-weight: 600;
-        margin-bottom: 4px;
+        font-weight: 700;
+        font-size: 14px;
+        margin: 0 0 4px;
       }
 
       .faq-a {
         font-size: 14px;
         color: var(--text-muted);
+        margin: 0;
       }
 
       /* FEEDBACK */
-
       .feedback-section {
         border-radius: 20px;
         border: 1px solid var(--border-subtle);
@@ -437,9 +454,7 @@
       }
 
       /* MOBILE */
-
       @media (max-width: 768px) {
-        /* шапка: лого слева, How / FAQ справа */
         .site-header {
           flex-direction: row;
           align-items: center;
@@ -453,12 +468,10 @@
           flex-wrap: nowrap;
         }
 
-        /* прячем кнопку в хедере на мобиле */
         .nav-button {
           display: none;
         }
 
-        /* переносим in one click на вторую строку */
         .hero-title span {
           display: block;
           margin-top: 4px;
@@ -469,25 +482,76 @@
         }
       }
     </style>
+
+    <!-- Structured data: SoftwareApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "PDF to PNG",
+        "applicationCategory": "BrowserExtension",
+        "operatingSystem": "Chrome",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "url": "https://pdf-to-png.com/",
+        "downloadUrl": "https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=pdf-to-png.com",
+        "description": "Convert PDF pages to crisp PNG images directly in your browser. No uploads — everything happens locally on your device."
+      }
+    </script>
+
+    <!-- Structured data: FAQPage -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is the extension really free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. You can install and use it for free. If you like it, you can support the project with a small donation."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are my documents uploaded anywhere?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. All conversion happens directly in your browser using local processing. Your PDF files never leave your computer."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use it without an internet connection?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. After installation from the Chrome Web Store, the extension can convert PDFs to PNGs even when you are offline."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
 
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="page">
       <!-- HEADER -->
       <header class="site-header">
         <div class="brand">
-          <img
-            src="icons/icon48.png"
-            alt="PDF to PNG logo"
-            class="brand-logo"
-          />
+          <img src="icons/icon48.png" alt="PDF to PNG logo" class="brand-logo" />
           <div class="brand-name">PDF to PNG</div>
         </div>
-        <nav class="main-nav">
+        <nav class="main-nav" aria-label="Primary navigation">
           <a href="#how-why">How it works</a>
           <a href="#faq">FAQ</a>
           <a
-            href="https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=my_website"
+            href="https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=pdf-to-png.com"
             target="_blank"
             rel="noreferrer"
             class="nav-button"
@@ -497,190 +561,180 @@
         </nav>
       </header>
 
-      <!-- HERO -->
-      <section class="hero">
-        <div class="hero-left">
-          <div class="hero-kicker">Convert PDF pages to PNG images</div>
-          <h1 class="hero-title">
-            PDF to PNG converter <span>in one click</span>
-          </h1>
-          <p class="hero-subtitle">
-            Quickly convert any PDF file into crisp PNG images right in your
-            browser. No uploads, no waiting – everything happens locally on your
-            device.
-          </p>
+      <main id="main">
+        <!-- HERO -->
+        <section class="hero" aria-label="PDF to PNG converter hero section">
+          <div class="hero-left">
+            <div class="hero-kicker">Convert PDF pages to PNG images</div>
+            <h1 class="hero-title">
+              PDF to PNG converter <span>in one click</span>
+            </h1>
+            <p class="hero-subtitle">
+              Quickly convert any PDF file into crisp PNG images right in your
+              browser. No uploads, no waiting – everything happens locally on
+              your device.
+            </p>
 
-          <div class="hero-actions">
-            <a
-              href="https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=my_website"
-              class="hero-button"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Install the extension – It’s free
-            </a>
-          </div>
-        </div>
-
-        <!-- POPUP MOCK -->
-        <div class="hero-right">
-          <div class="ext-card">
-            <div class="ext-header">
-              <div class="ext-logo">
-                <img src="icons/icon48.png" alt="PDF to PNG" />
-                <span>PDF to PNG</span>
-              </div>
+            <div class="hero-actions">
+              <a
+                href="https://chromewebstore.google.com/detail/bgpfjcfimjfnlogfkpfckakdfbjabdfd?utm_source=pdf-to-png.com"
+                class="hero-button"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Install the extension – It’s free
+              </a>
             </div>
-            <div class="ext-body">
-              <div class="ext-badge">Free Chrome extension</div>
-              <div class="ext-title">PDF → PNG converter</div>
-              <div class="ext-subtitle">
-                Convert any PDF to crisp PNG images directly in your browser.
-                No uploads, everything happens locally on your device.
-              </div>
-              <div class="ext-button">
-                <span>Choose PDF file</span>
-              </div>
+          </div>
 
-              <div class="ext-file">
-                <div class="ext-file-name">slides.pdf</div>
-                <div class="ext-file-meta">
-                  12 pages · Ready to convert to PNG
+          <!-- POPUP MOCK -->
+          <div class="hero-right">
+            <div class="ext-card">
+              <div class="ext-header">
+                <div class="ext-logo">
+                  <img src="icons/icon48.png" alt="PDF to PNG" />
+                  <span>PDF to PNG</span>
+                </div>
+              </div>
+              <div class="ext-body">
+                <div class="ext-badge">Free Chrome extension</div>
+                <div class="ext-title">PDF → PNG converter</div>
+                <div class="ext-subtitle">
+                  Convert any PDF to crisp PNG images directly in your browser.
+                  No uploads, everything happens locally on your device.
+                </div>
+                <div class="ext-button">
+                  <span>Choose PDF file</span>
+                </div>
+
+                <div class="ext-file">
+                  <div class="ext-file-name">slides.pdf</div>
+                  <div class="ext-file-meta">
+                    12 pages · Ready to convert to PNG
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- HOW + WHY -->
-      <section id="how-why">
-        <div class="two-col-wrapper">
-          <div class="two-col">
-            <h2 class="section-title">
-              How to convert PDF to PNG in Chrome
-            </h2>
-            <ol class="steps">
-              <li>
-                <span>Install the “PDF to PNG” Chrome extension.</span>
-              </li>
-              <li>
-                <span>Pin it to your toolbar for quick access.</span>
-              </li>
-              <li>
-                <span>Click the extension icon and choose a PDF file.</span>
-              </li>
-              <li>
-                <span>
-                  The extension converts each page locally and shows you a PNG
-                  preview.
-                </span>
-              </li>
-              <li>
-                <span>Download the pages you need as PNG images.</span>
-              </li>
-            </ol>
-          </div>
+        <!-- HOW + WHY -->
+        <section id="how-why">
+          <div class="two-col-wrapper">
+            <div class="two-col">
+              <h2 class="section-title">How to convert PDF to PNG in Chrome</h2>
+              <ol class="steps">
+                <li><span>Install the “PDF to PNG” Chrome extension.</span></li>
+                <li><span>Pin it to your toolbar for quick access.</span></li>
+                <li><span>Click the extension icon and choose a PDF file.</span></li>
+                <li>
+                  <span>
+                    The extension converts each page locally and shows you a PNG
+                    preview.
+                  </span>
+                </li>
+                <li><span>Download the pages you need as PNG images.</span></li>
+              </ol>
+            </div>
 
-          <div class="two-col">
-            <h2 class="section-title">
-              Why use a PDF to PNG extension instead of a website?
-            </h2>
-            <ul class="bullets">
-              <li>
-                <span>
-                  <strong>Privacy first.</strong> Your PDF files never leave
-                  your device – there are no uploads to third-party servers.
-                </span>
-              </li>
-              <li>
-                <span>
-                  <strong>Works offline.</strong> Once installed, the extension
-                  works even without an internet connection.
-                </span>
-              </li>
-              <li>
-                <span>
-                  <strong>Fast previews.</strong> Convert and preview pages
-                  directly in your browser popup.
-                </span>
-              </li>
-              <li>
-                <span>
-                  <strong>Always at hand.</strong> No need to search for a
-                  converter website – the extension lives in your Chrome
-                  toolbar.
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- FAQ -->
-      <section id="faq">
-        <div class="faq-section">
-          <div class="faq-header">
-            <h2 class="faq-title">FAQ</h2>
-            <div class="faq-subtitle">
-              A few quick answers before you install.
+            <div class="two-col">
+              <h2 class="section-title">
+                Why use a PDF to PNG extension instead of a website?
+              </h2>
+              <ul class="bullets">
+                <li>
+                  <span>
+                    <strong>Privacy first.</strong> Your PDF files never leave
+                    your device – there are no uploads to third-party servers.
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <strong>Works offline.</strong> Once installed, the extension
+                    works even without an internet connection.
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <strong>Fast previews.</strong> Convert and preview pages
+                    directly in your browser popup.
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <strong>Always at hand.</strong> No need to search for a
+                    converter website – the extension lives in your Chrome
+                    toolbar.
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
+        </section>
 
-          <div class="faq-item">
-            <div class="faq-q">Is the extension really free?</div>
-            <div class="faq-a">
-              Yes. You can install and use it for free. If you like it, you can
-              support the project with a small donation.
+        <!-- FAQ -->
+        <section id="faq">
+          <div class="faq-section">
+            <div class="faq-header">
+              <h2 class="faq-title">FAQ</h2>
+              <div class="faq-subtitle">A few quick answers before you install.</div>
+            </div>
+
+            <div class="faq-item">
+              <h3 class="faq-q">Is the extension really free?</h3>
+              <p class="faq-a">
+                Yes. You can install and use it for free. If you like it, you can
+                support the project with a small donation.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3 class="faq-q">Are my documents uploaded anywhere?</h3>
+              <p class="faq-a">
+                No. All conversion happens directly in your browser using local
+                processing. Your PDF files never leave your computer.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3 class="faq-q">Can I use it without an internet connection?</h3>
+              <p class="faq-a">
+                Yes. After installation from the Chrome Web Store, the extension
+                can convert PDFs to PNGs even when you are offline.
+              </p>
             </div>
           </div>
+        </section>
 
-          <div class="faq-item">
-            <div class="faq-q">Are my documents uploaded anywhere?</div>
-            <div class="faq-a">
-              No. All conversion happens directly in your browser using local
-              processing. Your PDF files never leave your computer.
+        <!-- FEEDBACK -->
+        <section aria-label="Feedback section">
+          <div class="feedback-section">
+            <div class="feedback-title">Help make this extension better</div>
+            <p class="section-text" style="margin-bottom: 6px;">
+              I’m actively improving this project. If you have ideas, feature
+              requests or just want to say hi, I’d love to hear from you.
+            </p>
+            <div class="feedback-links">
+              <a
+                href="https://shikalovak.typeform.com/to/FWLacIaR"
+                target="_blank"
+                rel="noreferrer"
+                class="feedback-link"
+              >
+                Leave feedback / request a feature
+              </a>
+              <a
+                href="https://www.buymeacoffee.com/shikalova"
+                target="_blank"
+                rel="noreferrer"
+                class="feedback-link"
+              >
+                Support this project ☕
+              </a>
             </div>
           </div>
-
-          <div class="faq-item">
-            <div class="faq-q">Can I use it without an internet connection?</div>
-            <div class="faq-a">
-              Yes. After installation from the Chrome Web Store, the extension
-              can convert PDFs to PNGs even when you are offline.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FEEDBACK -->
-      <section>
-        <div class="feedback-section">
-          <div class="feedback-title">Help make this extension better</div>
-          <p class="section-text" style="margin-bottom: 6px;">
-            I’m actively improving this project. If you have ideas, feature
-            requests or just want to say hi, I’d love to hear from you.
-          </p>
-          <div class="feedback-links">
-            <a
-              href="https://shikalovak.typeform.com/to/FWLacIaR"
-              target="_blank"
-              rel="noreferrer"
-              class="feedback-link"
-            >
-              Leave feedback / request a feature
-            </a>
-            <a
-              href="https://www.buymeacoffee.com/shikalova"
-              target="_blank"
-              rel="noreferrer"
-              class="feedback-link"
-            >
-              Support this project ☕
-            </a>
-          </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       <!-- FOOTER -->
       <footer class="site-footer">
