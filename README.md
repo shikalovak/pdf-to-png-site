@@ -10,7 +10,7 @@ This repository contains the website source code. The extension itself is distri
 
 ## Screenshot
 
-![PDF to PNG extension](assets/screenshot.png)
+![PDF to PNG extension](assets/Screenshot.png)
 
 ---
 
